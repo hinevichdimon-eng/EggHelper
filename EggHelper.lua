@@ -43,6 +43,108 @@ local scale = Instance.new("UIScale")
 scale.Scale = 0.65
 scale.Parent = main
 
+
+-- Декор: паутина и анимированные паучки
+-- Лёгкая паутина в углах окна, чтобы не мешать кнопкам.
+local webFolder = Instance.new("Folder")
+webFolder.Name = "SpiderDecor"
+webFolder.Parent = main
+
+local function addWebLine(parent, x, y, length, rotation)
+    local line = Instance.new("Frame")
+    line.Name = "WebLine"
+    line.AnchorPoint = Vector2.new(0, 0.5)
+    line.Position = UDim2.new(0, x, 0, y)
+    line.Size = UDim2.new(0, length, 0, 1)
+    line.Rotation = rotation
+    line.BackgroundColor3 = Color3.fromRGB(220, 220, 255)
+    line.BackgroundTransparency = 0.68
+    line.BorderSizePixel = 0
+    line.ZIndex = 1
+    line.Parent = webFolder
+    return line
+end
+
+-- Паутина сверху слева
+for angle = -10, 80, 15 do
+    addWebLine(webFolder, 0, 0, 95, angle)
+end
+for radius = 22, 88, 22 do
+    local arc = Instance.new("Frame")
+    arc.Name = "WebArc"
+    arc.AnchorPoint = Vector2.new(0, 0)
+    arc.Position = UDim2.new(0, 4, 0, 4 + radius * 0.25)
+    arc.Size = UDim2.new(0, radius, 0, 1)
+    arc.Rotation = 12
+    arc.BackgroundColor3 = Color3.fromRGB(220, 220, 255)
+    arc.BackgroundTransparency = 0.76
+    arc.BorderSizePixel = 0
+    arc.ZIndex = 1
+    arc.Parent = webFolder
+end
+
+-- Паутина снизу справа
+for angle = 170, 260, 15 do
+    addWebLine(webFolder, 350, 270, 95, angle)
+end
+for radius = 22, 88, 22 do
+    local arc = Instance.new("Frame")
+    arc.Name = "WebArc"
+    arc.AnchorPoint = Vector2.new(1, 1)
+    arc.Position = UDim2.new(1, -4 - radius * 0.25, 1, -4)
+    arc.Size = UDim2.new(0, radius, 0, 1)
+    arc.Rotation = 12
+    arc.BackgroundColor3 = Color3.fromRGB(220, 220, 255)
+    arc.BackgroundTransparency = 0.76
+    arc.BorderSizePixel = 0
+    arc.ZIndex = 1
+    arc.Parent = webFolder
+end
+
+local spiderLabels = {}
+
+local function createSpider(name, startX, startY, endX, endY, duration, delayTime)
+    local spider = Instance.new("TextLabel")
+    spider.Name = name
+    spider.Size = UDim2.new(0, 28, 0, 28)
+    spider.Position = UDim2.new(0, startX, 0, startY)
+    spider.BackgroundTransparency = 1
+    spider.Text = "🕷️"
+    spider.TextSize = 22
+    spider.ZIndex = 2
+    spider.Parent = main
+
+    table.insert(spiderLabels, spider)
+
+    task.spawn(function()
+        task.wait(delayTime)
+        while gui.Parent and spider.Parent do
+            local move = TweenService:Create(
+                spider,
+                TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                {Position = UDim2.new(0, endX, 0, endY), Rotation = 12}
+            )
+            move:Play()
+            move.Completed:Wait()
+
+            if not gui.Parent or not spider.Parent then
+                break
+            end
+
+            local returnMove = TweenService:Create(
+                spider,
+                TweenInfo.new(duration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                {Position = UDim2.new(0, startX, 0, startY), Rotation = -12}
+            )
+            returnMove:Play()
+            returnMove.Completed:Wait()
+        end
+    end)
+end
+
+createSpider("SpiderTop", 18, 48, 88, 76, 2.2, 0.2)
+createSpider("SpiderBottom", 285, 215, 250, 175, 2.8, 0.8)
+
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 48)
 header.BackgroundColor3 = Color3.fromRGB(30, 20, 55)
@@ -430,5 +532,3 @@ local openTween = TweenService:Create(
     TweenInfo.new(0.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
     {Scale = 1}
 )
-
-openTween:Play()
