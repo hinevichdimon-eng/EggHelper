@@ -43,6 +43,31 @@ local scale = Instance.new("UIScale")
 scale.Scale = 0.65
 scale.Parent = main
 
+-- Короткая Halloween-заставка при открытии окна
+local halloweenBanner = Instance.new("TextLabel")
+halloweenBanner.Name = "HalloweenIntro"
+halloweenBanner.AnchorPoint = Vector2.new(0.5, 1)
+halloweenBanner.Position = UDim2.new(0.5, 0, 0, -12)
+halloweenBanner.Size = UDim2.new(1, -12, 0, 52)
+halloweenBanner.BackgroundTransparency = 1
+halloweenBanner.Text = "🎃 HAPPY HALLOWEEN 👻"
+halloweenBanner.TextColor3 = Color3.fromRGB(255, 145, 40)
+halloweenBanner.TextStrokeColor3 = Color3.fromRGB(150, 35, 255)
+halloweenBanner.TextStrokeTransparency = 1
+halloweenBanner.TextTransparency = 1
+halloweenBanner.TextScaled = true
+halloweenBanner.Font = Enum.Font.GothamBlack
+halloweenBanner.ZIndex = 20
+halloweenBanner.Parent = main
+
+local bannerStroke = Instance.new("UIStroke")
+bannerStroke.Color = Color3.fromRGB(175, 55, 255)
+bannerStroke.Thickness = 1.5
+bannerStroke.Transparency = 1
+bannerStroke.Parent = halloweenBanner
+
+
+
 local header = Instance.new("Frame")
 header.Size = UDim2.new(1, 0, 0, 48)
 header.BackgroundColor3 = Color3.fromRGB(30, 20, 55)
@@ -58,7 +83,7 @@ local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, -100, 1, 0)
 title.Position = UDim2.new(0, 15, 0, 0)
 title.BackgroundTransparency = 1
-title.Text = "jami hab"
+title.Text = "jamie🤗"
 title.TextColor3 = Color3.new(1, 1, 1)
 title.TextSize = 22
 title.Font = Enum.Font.GothamBold
@@ -432,3 +457,33 @@ local openTween = TweenService:Create(
 )
 
 openTween:Play()
+
+-- Надпись появляется, немного держится и плавно исчезает
+local bannerIn = TweenService:Create(
+    halloweenBanner,
+    TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    {TextTransparency = 0, TextStrokeTransparency = 0.15, Position = UDim2.new(0.5, 0, 0, -8)}
+)
+local strokeIn = TweenService:Create(
+    bannerStroke,
+    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+    {Transparency = 0.15}
+)
+bannerIn:Play()
+strokeIn:Play()
+
+task.delay(1.15, function()
+    if not halloweenBanner.Parent then return end
+    local bannerOut = TweenService:Create(
+        halloweenBanner,
+        TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+        {TextTransparency = 1, TextStrokeTransparency = 1, Position = UDim2.new(0.5, 0, 0, -24)}
+    )
+    local strokeOut = TweenService:Create(
+        bannerStroke,
+        TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+        {Transparency = 1}
+    )
+    bannerOut:Play()
+    strokeOut:Play()
+end)
