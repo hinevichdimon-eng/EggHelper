@@ -20,7 +20,7 @@ gui.Parent = playerGui
 
 local main = Instance.new("Frame")
 main.Name = "Main"
-main.Size = UDim2.new(0, 350, 0, 270)
+main.Size = UDim2.new(0, 350, 0, 335)
 main.Position = UDim2.new(0.5, -175, 0.5, -135)
 main.BackgroundColor3 = Color3.fromRGB(35, 25, 65)
 main.BorderSizePixel = 0
@@ -211,7 +211,7 @@ menuCorner.CornerRadius = UDim.new(0, 9)
 menuCorner.Parent = menuTab
 
 local eggPage = Instance.new("Frame")
-eggPage.Size = UDim2.new(1, -20, 0, 155)
+eggPage.Size = UDim2.new(1, -20, 0, 220)
 eggPage.Position = UDim2.new(0, 10, 0, 107)
 eggPage.BackgroundColor3 = Color3.fromRGB(30, 25, 60)
 eggPage.BackgroundTransparency = 0.2
@@ -233,7 +233,7 @@ eggText.Font = Enum.Font.Gotham
 eggText.Parent = eggPage
 
 local menuPage = Instance.new("Frame")
-menuPage.Size = UDim2.new(1, -20, 0, 155)
+menuPage.Size = UDim2.new(1, -20, 0, 220)
 menuPage.Position = UDim2.new(0, 10, 0, 107)
 menuPage.BackgroundColor3 = Color3.fromRGB(30, 25, 60)
 menuPage.BackgroundTransparency = 0.2
@@ -438,113 +438,226 @@ createToggle(menuPage, "FARM SPEED 🏃", 73, function(enabled)
     farmEnabled = enabled
 end)
 
+
+-- FLY: управление направлением через джойстик/ WASD, вверх через прыжок, вниз через Ctrl
+local RunService = game:GetService("RunService")
+local flyEnabled = false
+local flySpeed = 60
+local flyVelocity
+local flyGyro
+local flyConnection
+
+local flyButton = Instance.new("TextButton")
+flyButton.Size = UDim2.new(1, -20, 0, 48)
+flyButton.Position = UDim2.new(0, 10, 0, 138)
+flyButton.BackgroundColor3 = Color3.fromRGB(65, 55, 125)
+flyButton.Text = "🪽 FLY : OFF"
+flyButton.TextColor3 = Color3.new(1, 1, 1)
+flyButton.TextSize = 16
+flyButton.Font = Enum.Font.GothamBold
+flyButton.Parent = menuPage
+Instance.new("UICorner", flyButton).CornerRadius = UDim.new(0, 9)
+
+local speedLabel = Instance.new("TextLabel")
+speedLabel.Size = UDim2.new(1, -75, 0, 30)
+speedLabel.Position = UDim2.new(0, 12, 0, 188)
+speedLabel.BackgroundTransparency = 1
+speedLabel.Text = "Fly speed: " .. flySpeed
+speedLabel.TextColor3 = Color3.new(1, 1, 1)
+speedLabel.TextSize = 15
+speedLabel.Font = Enum.Font.GothamBold
+speedLabel.TextXAlignment = Enum.TextXAlignment.Left
+speedLabel.Parent = menuPage
+
+local speedPlus = Instance.new("TextButton")
+speedPlus.Size = UDim2.new(0, 42, 0, 30)
+speedPlus.Position = UDim2.new(1, -54, 0, 188)
+speedPlus.BackgroundColor3 = Color3.fromRGB(115, 75, 190)
+speedPlus.Text = "+"
+speedPlus.TextColor3 = Color3.new(1, 1, 1)
+speedPlus.TextSize = 22
+speedPlus.Font = Enum.Font.GothamBold
+speedPlus.Parent = menuPage
+Instance.new("UICorner", speedPlus).CornerRadius = UDim.new(0, 8)
+
+-- Отдельное небольшое окно настройки скорости
+local speedWindow = Instance.new("Frame")
+speedWindow.Name = "FlySpeedWindow"
+speedWindow.Size = UDim2.new(0, 220, 0, 125)
+speedWindow.Position = UDim2.new(0.5, -110, 0.5, -62)
+speedWindow.BackgroundColor3 = Color3.fromRGB(35, 25, 65)
+speedWindow.BorderSizePixel = 0
+speedWindow.Visible = false
+speedWindow.ZIndex = 40
+speedWindow.Parent = gui
+Instance.new("UICorner", speedWindow).CornerRadius = UDim.new(0, 12)
+
+local speedTitle = Instance.new("TextLabel")
+speedTitle.Size = UDim2.new(1, -35, 0, 30)
+speedTitle.Position = UDim2.new(0, 10, 0, 5)
+speedTitle.BackgroundTransparency = 1
+speedTitle.Text = "FLY SPEED"
+speedTitle.TextColor3 = Color3.new(1, 1, 1)
+speedTitle.Font = Enum.Font.GothamBold
+speedTitle.TextSize = 16
+speedTitle.ZIndex = 41
+speedTitle.Parent = speedWindow
+
+local speedClose = Instance.new("TextButton")
+speedClose.Size = UDim2.new(0, 28, 0, 28)
+speedClose.Position = UDim2.new(1, -33, 0, 5)
+speedClose.BackgroundColor3 = Color3.fromRGB(180, 55, 85)
+speedClose.Text = "×"
+speedClose.TextColor3 = Color3.new(1, 1, 1)
+speedClose.TextSize = 20
+speedClose.ZIndex = 41
+speedClose.Parent = speedWindow
+Instance.new("UICorner", speedClose).CornerRadius = UDim.new(0, 7)
+
+local speedValue = Instance.new("TextLabel")
+speedValue.Size = UDim2.new(0, 70, 0, 38)
+speedValue.Position = UDim2.new(0.5, -35, 0, 42)
+speedValue.BackgroundTransparency = 1
+speedValue.Text = tostring(flySpeed)
+speedValue.TextColor3 = Color3.new(1, 1, 1)
+speedValue.TextSize = 22
+speedValue.Font = Enum.Font.GothamBold
+speedValue.ZIndex = 41
+speedValue.Parent = speedWindow
+
+local function updateFlySpeed()
+    speedLabel.Text = "Fly speed: " .. flySpeed
+    speedValue.Text = tostring(flySpeed)
+end
+
+local speedMinus = Instance.new("TextButton")
+speedMinus.Size = UDim2.new(0, 42, 0, 34)
+speedMinus.Position = UDim2.new(0.5, -72, 1, -42)
+speedMinus.BackgroundColor3 = Color3.fromRGB(65, 55, 125)
+speedMinus.Text = "−"
+speedMinus.TextColor3 = Color3.new(1, 1, 1)
+speedMinus.TextSize = 22
+speedMinus.ZIndex = 41
+speedMinus.Parent = speedWindow
+Instance.new("UICorner", speedMinus).CornerRadius = UDim.new(0, 8)
+
+local speedPlusMore = Instance.new("TextButton")
+speedPlusMore.Size = UDim2.new(0, 42, 0, 34)
+speedPlusMore.Position = UDim2.new(0.5, 30, 1, -42)
+speedPlusMore.BackgroundColor3 = Color3.fromRGB(115, 75, 190)
+speedPlusMore.Text = "+"
+speedPlusMore.TextColor3 = Color3.new(1, 1, 1)
+speedPlusMore.TextSize = 22
+speedPlusMore.ZIndex = 41
+speedPlusMore.Parent = speedWindow
+Instance.new("UICorner", speedPlusMore).CornerRadius = UDim.new(0, 8)
+
+speedPlus.MouseButton1Click:Connect(function()
+    speedWindow.Visible = true
+end)
+speedClose.MouseButton1Click:Connect(function()
+    speedWindow.Visible = false
+end)
+speedMinus.MouseButton1Click:Connect(function()
+    flySpeed = math.max(10, flySpeed - 10)
+    updateFlySpeed()
+end)
+speedPlusMore.MouseButton1Click:Connect(function()
+    flySpeed = math.min(300, flySpeed + 10)
+    updateFlySpeed()
+end)
+
+local function stopFly()
+    if flyConnection then
+        flyConnection:Disconnect()
+        flyConnection = nil
+    end
+    if flyVelocity then
+        flyVelocity:Destroy()
+        flyVelocity = nil
+    end
+    if flyGyro then
+        flyGyro:Destroy()
+        flyGyro = nil
+    end
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.PlatformStand = false
+        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+    end
+end
+
+local function startFly()
+    stopFly()
+    local character = player.Character
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    local root = character and character:FindFirstChild("HumanoidRootPart")
+    if not humanoid or not root then
+        flyEnabled = false
+        flyButton.Text = "🪽 FLY : OFF"
+        return
+    end
+
+    humanoid.PlatformStand = true
+    flyVelocity = Instance.new("BodyVelocity")
+    flyVelocity.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+    flyVelocity.Velocity = Vector3.zero
+    flyVelocity.Parent = root
+
+    flyGyro = Instance.new("BodyGyro")
+    flyGyro.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
+    flyGyro.P = 9e4
+    flyGyro.CFrame = workspace.CurrentCamera.CFrame
+    flyGyro.Parent = root
+
+    flyConnection = RunService.RenderStepped:Connect(function()
+        if not flyEnabled or not root.Parent then
+            return
+        end
+        local camera = workspace.CurrentCamera
+        local move = humanoid.MoveDirection
+        local vertical = 0
+        if UserInputService:IsKeyDown(Enum.KeyCode.Space) or humanoid.Jump then
+            vertical = 1
+        elseif UserInputService:IsKeyDown(Enum.KeyCode.LeftControl)
+            or UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
+            vertical = -1
+        end
+        -- На телефоне вертикальное движение доступно кнопкой прыжка;
+        -- горизонтальное — стандартным экранным джойстиком.
+        flyVelocity.Velocity = (move * flySpeed) + Vector3.new(0, vertical * flySpeed, 0)
+        if camera then
+            flyGyro.CFrame = CFrame.new(root.Position, root.Position + camera.CFrame.LookVector)
+        end
+    end)
+end
+
+flyButton.MouseButton1Click:Connect(function()
+    flyEnabled = not flyEnabled
+    flyButton.Text = flyEnabled and "🪽 FLY : ON" or "🪽 FLY : OFF"
+    flyButton.BackgroundColor3 = flyEnabled
+        and Color3.fromRGB(100, 75, 190)
+        or Color3.fromRGB(65, 55, 125)
+    if flyEnabled then
+        startFly()
+    else
+        stopFly()
+    end
+end)
+
+player.CharacterAdded:Connect(function()
+    if flyEnabled then
+        task.wait(1)
+        startFly()
+    end
+end)
+
+
 local collapsed = false
 
 collapse.MouseButton1Click:Connect(function()
     collapsed = not collapsed
 
     tabBar.Visible = not collapsed
-    eggPage.Visible = not collapsed and eggPage.Visible
-    menuPage.Visible = not collapsed and menuPage.Visible
-
-    if collapsed then
-        -- В маленьком окне паучок и нить полностью скрыты
-        spider.Visible = false
-        spiderThread.Visible = false
-
-        main:TweenSize(
-            UDim2.new(0, 250, 0, 48),
-            Enum.EasingDirection.Out,
-            Enum.EasingStyle.Quad,
-            0.2,
-            true
-        )
-        collapse.Text = "+"
-    else
-        main:TweenSize(
-            UDim2.new(0, 350, 0, 270),
-            Enum.EasingDirection.Out,
-            Enum.EasingStyle.Quad,
-            0.2,
-            true
-        )
-        collapse.Text = "−"
-
-        -- При каждом раскрытии паучок появляется сверху и снова спускается
-        spiderThread.Size = UDim2.new(0, 2, 0, 0)
-        spider.Position = UDim2.new(1, -30, 0, -2)
-        spider.Visible = true
-        spiderThread.Visible = true
-
-        local spiderDropAgain = TweenService:Create(
-            spiderThread,
-            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
-            {Size = UDim2.new(0, 2, 0, 78)}
-        )
-        local spiderMoveAgain = TweenService:Create(
-            spider,
-            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
-            {Position = UDim2.new(1, -30, 0, 78)}
-        )
-        spiderDropAgain:Play()
-        spiderMoveAgain:Play()
-    end
-end)
-
-close.MouseButton1Click:Connect(function()
-    gui:Destroy()
-end)
-
-showTab("EGG")
-
-local openTween = TweenService:Create(
-    scale,
-    TweenInfo.new(2, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {Scale = 1}
-)
-
-openTween:Play()
-
-local spiderDrop = TweenService:Create(
-    spiderThread,
-    TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
-    {Size = UDim2.new(0, 2, 0, 78)}
-)
-local spiderMove = TweenService:Create(
-    spider,
-    TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
-    {Position = UDim2.new(1, -30, 0, 78)}
-)
-spiderDrop:Play()
-spiderMove:Play()
-
-
--- Надпись появляется, немного держится и плавно исчезает
-local bannerIn = TweenService:Create(
-    halloweenBanner,
-    TweenInfo.new(2, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
-    {TextTransparency = 0, TextStrokeTransparency = 0.15, Position = UDim2.new(0.5, 0, 0, -8)}
-)
-local strokeIn = TweenService:Create(
-    bannerStroke,
-    TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-    {Transparency = 0.15}
-)
-bannerIn:Play()
-strokeIn:Play()
-
-task.delay(1.15, function()
-    if not halloweenBanner.Parent then return end
-    local bannerOut = TweenService:Create(
-        halloweenBanner,
-        TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
-        {TextTransparency = 1, TextStrokeTransparency = 1, Position = UDim2.new(0.5, 0, 0, -24)}
-    )
-    local strokeOut = TweenService:Create(
-        bannerStroke,
-        TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
-        {Transparency = 1}
-    )
-    bannerOut:Play()
-    strokeOut:Play()
-end)
+    eggPage.Visible = not collap
