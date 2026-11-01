@@ -448,6 +448,10 @@ collapse.MouseButton1Click:Connect(function()
     menuPage.Visible = not collapsed and menuPage.Visible
 
     if collapsed then
+        -- В маленьком окне паучок и нить полностью скрыты
+        spider.Visible = false
+        spiderThread.Visible = false
+
         main:TweenSize(
             UDim2.new(0, 250, 0, 48),
             Enum.EasingDirection.Out,
@@ -465,6 +469,25 @@ collapse.MouseButton1Click:Connect(function()
             true
         )
         collapse.Text = "−"
+
+        -- При каждом раскрытии паучок появляется сверху и снова спускается
+        spiderThread.Size = UDim2.new(0, 2, 0, 0)
+        spider.Position = UDim2.new(1, -30, 0, -2)
+        spider.Visible = true
+        spiderThread.Visible = true
+
+        local spiderDropAgain = TweenService:Create(
+            spiderThread,
+            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0, 2, 0, 78)}
+        )
+        local spiderMoveAgain = TweenService:Create(
+            spider,
+            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+            {Position = UDim2.new(1, -30, 0, 78)}
+        )
+        spiderDropAgain:Play()
+        spiderMoveAgain:Play()
     end
 end)
 
