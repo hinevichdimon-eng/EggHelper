@@ -567,6 +567,8 @@ speedPlusMore.MouseButton1Click:Connect(function()
     updateFlySpeed()
 end)
 
+local savedAutoRotate = true
+
 local function stopFly()
     if flyConnection then
         flyConnection:Disconnect()
@@ -580,56 +582,79 @@ local function stopFly()
         flyGyro:Destroy()
         flyGyro = nil
     end
+
     local character = player.Character
     local humanoid = character and character:FindFirstChildOfClass("Humanoid")
     if humanoid then
         humanoid.PlatformStand = false
+        humanoid.AutoRotate = savedAutoRotate
         humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
     end
 end
 
 local function startFly()
     stopFly()
+
     local character = player.Character
     local humanoid = character and character:FindFirstChildOfClass("Humanoid")
     local root = character and character:FindFirstChild("HumanoidRootPart")
+
     if not humanoid or not root then
         flyEnabled = false
         flyButton.Text = "🪽 FLY : OFF"
         return
     end
 
-    humanoid.PlatformStand = true
+    savedAutoRotate = humanoid.AutoRotate
+    humanoid.PlatformStand = false
+    humanoid.AutoRotate = false
+    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
+
     flyVelocity = Instance.new("BodyVelocity")
-    flyVelocity.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+    flyVelocity.Name = "EggHelperFlyVelocity"
+    flyVelocity.MaxForce = Vector3.new(1e6, 1e6, 1e6)
+    flyVelocity.P = 1e4
     flyVelocity.Velocity = Vector3.zero
     flyVelocity.Parent = root
 
     flyGyro = Instance.new("BodyGyro")
-    flyGyro.MaxTorque = Vector3.new(1e9, 1e9, 1e9)
-    flyGyro.P = 9e4
+    flyGyro.Name = "EggHelperFlyGyro"
+    flyGyro.MaxTorque = Vector3.new(1e6, 1e6, 1e6)
+    flyGyro.P = 2e4
+    flyGyro.D = 500
     flyGyro.CFrame = workspace.CurrentCamera.CFrame
     flyGyro.Parent = root
 
     flyConnection = RunService.RenderStepped:Connect(function()
-        if not flyEnabled or not root.Parent then
+        if not flyEnabled or not root.Parent or not humanoid.Parent then
             return
         end
+
         local camera = workspace.CurrentCamera
-        local move = humanoid.MoveDirection
+        if not camera then
+            flyVelocity.Velocity = Vector3.zero
+            return
+        end
+
+        -- Берём направление стандартного джойстика, не заставляя Humanoid идти.
+        local moveDirection = humanoid.MoveDirection
         local vertical = 0
-        if UserInputService:IsKeyDown(Enum.KeyCode.Space) or humanoid.Jump then
+
+        if humanoid.Jump then
             vertical = 1
         elseif UserInputService:IsKeyDown(Enum.KeyCode.LeftControl)
             or UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
             vertical = -1
         end
-        -- На телефоне вертикальное движение доступно кнопкой прыжка;
-        -- горизонтальное — стандартным экранным джойстиком.
-        flyVelocity.Velocity = (move * flySpeed) + Vector3.new(0, vertical * flySpeed, 0)
-        if camera then
-            flyGyro.CFrame = CFrame.new(root.Position, root.Position + camera.CFrame.LookVector)
-        end
+
+        flyVelocity.Velocity =
+            (moveDirection * flySpeed) +
+            Vector3.new(0, vertical * flySpeed, 0)
+
+        flyGyro.CFrame = CFrame.lookAt(
+            root.Position,
+            root.Position + camera.CFrame.LookVector
+        )
     end)
 end
 
@@ -637,27 +662,4 @@ flyButton.MouseButton1Click:Connect(function()
     flyEnabled = not flyEnabled
     flyButton.Text = flyEnabled and "🪽 FLY : ON" or "🪽 FLY : OFF"
     flyButton.BackgroundColor3 = flyEnabled
-        and Color3.fromRGB(100, 75, 190)
-        or Color3.fromRGB(65, 55, 125)
-    if flyEnabled then
-        startFly()
-    else
-        stopFly()
-    end
-end)
-
-player.CharacterAdded:Connect(function()
-    if flyEnabled then
-        task.wait(1)
-        startFly()
-    end
-end)
-
-
-local collapsed = false
-
-collapse.MouseButton1Click:Connect(function()
-    collapsed = not collapsed
-
-    tabBar.Visible = not collapsed
-    eggPage.Visible = not collap
+        and Color3.fromRGB(100, 75, 1
