@@ -1,3 +1,11 @@
+-- EggHelper Halloween M5 Edition
+-- Fly removed. Menu contains ESP PLAYERS and FARM SPEED only.
+-- IMPORTANT: Roblox cannot display a photo stored on your phone directly.
+-- To use the BMW background and M5 badge, upload those images to Roblox
+-- and set their rbxassetid values in the image slots below.
+local BMW_BACKGROUND_IMAGE = "rbxassetid://0" -- replace 0 with your uploaded BMW image asset ID
+local M5_BADGE_IMAGE = "rbxassetid://0" -- replace 0 with your uploaded M5 Competition badge asset ID
+
 -- EggHelper
 -- Steal an Egg | Delta
 
@@ -20,12 +28,28 @@ gui.Parent = playerGui
 
 local main = Instance.new("Frame")
 main.Name = "Main"
-main.Size = UDim2.new(0, 350, 0, 335)
-main.Position = UDim2.new(0.5, -175, 0.5, -135)
+main.Size = UDim2.new(0, 390, 0, 300)
+main.Position = UDim2.new(0.5, -195, 0.5, -150)
 main.BackgroundColor3 = Color3.fromRGB(35, 25, 65)
 main.BorderSizePixel = 0
 main.Active = true
 main.Parent = gui
+
+local backgroundImage = Instance.new("ImageLabel")
+backgroundImage.Name = "BMWBackground"
+backgroundImage.Size = UDim2.new(1, 0, 1, 0)
+backgroundImage.Position = UDim2.new(0, 0, 0, 0)
+backgroundImage.BackgroundColor3 = Color3.fromRGB(12, 5, 24)
+backgroundImage.BackgroundTransparency = 0
+backgroundImage.Image = BMW_BACKGROUND_IMAGE
+backgroundImage.ScaleType = Enum.ScaleType.Crop
+backgroundImage.ImageTransparency = 0.18
+backgroundImage.ZIndex = 0
+backgroundImage.Parent = main
+
+local backgroundCorner = Instance.new("UICorner")
+backgroundCorner.CornerRadius = UDim.new(0, 14)
+backgroundCorner.Parent = backgroundImage
 
 local corner = Instance.new("UICorner")
 corner.CornerRadius = UDim.new(0, 14)
@@ -33,8 +57,8 @@ corner.Parent = main
 
 local gradient = Instance.new("UIGradient")
 gradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 45, 180)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(35, 100, 200))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(105, 20, 190)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 8, 35))
 })
 gradient.Rotation = 35
 gradient.Parent = main
@@ -97,19 +121,29 @@ header.Size = UDim2.new(1, 0, 0, 48)
 header.BackgroundColor3 = Color3.fromRGB(30, 20, 55)
 header.BackgroundTransparency = 0.15
 header.BorderSizePixel = 0
-header.Parent = main
+header.ZIndex = 2\nheader.Parent = main
 
 local headerCorner = Instance.new("UICorner")
 headerCorner.CornerRadius = UDim.new(0, 14)
 headerCorner.Parent = header
 
+local m5Badge = Instance.new("ImageLabel")
+m5Badge.Name = "M5CompetitionBadge"
+m5Badge.Size = UDim2.new(0, 34, 0, 34)
+m5Badge.Position = UDim2.new(0, 8, 0, 7)
+m5Badge.BackgroundTransparency = 1
+m5Badge.Image = M5_BADGE_IMAGE
+m5Badge.ScaleType = Enum.ScaleType.Fit
+m5Badge.ZIndex = 4
+m5Badge.Parent = header
+
 local title = Instance.new("TextLabel")
-title.Size = UDim2.new(1, -100, 1, 0)
-title.Position = UDim2.new(0, 15, 0, 0)
+title.Size = UDim2.new(1, -145, 1, 0)
+title.Position = UDim2.new(0, 48, 0, 0)
 title.BackgroundTransparency = 1
-title.Text = "jamie🤗"
+title.Text = "🏁  jamie🤗  |  Happy Halloween! 💜"
 title.TextColor3 = Color3.new(1, 1, 1)
-title.TextSize = 22
+title.TextSize = 16
 title.Font = Enum.Font.GothamBold
 title.TextXAlignment = Enum.TextXAlignment.Left
 title.Parent = header
@@ -180,12 +214,12 @@ local tabBar = Instance.new("Frame")
 tabBar.Size = UDim2.new(1, -20, 0, 42)
 tabBar.Position = UDim2.new(0, 10, 0, 57)
 tabBar.BackgroundTransparency = 1
-tabBar.Parent = main
+tabBar.ZIndex = 2\ntabBar.Parent = main
 
 local eggTab = Instance.new("TextButton")
 eggTab.Size = UDim2.new(0.5, -5, 1, 0)
 eggTab.Position = UDim2.new(0, 0, 0, 0)
-eggTab.BackgroundColor3 = Color3.fromRGB(115, 75, 190)
+eggTab.BackgroundColor3 = Color3.fromRGB(115, 25, 210)
 eggTab.Text = "🥚 EGG"
 eggTab.TextColor3 = Color3.new(1, 1, 1)
 eggTab.TextSize = 16
@@ -199,7 +233,7 @@ eggCorner.Parent = eggTab
 local menuTab = Instance.new("TextButton")
 menuTab.Size = UDim2.new(0.5, -5, 1, 0)
 menuTab.Position = UDim2.new(0.5, 5, 0, 0)
-menuTab.BackgroundColor3 = Color3.fromRGB(65, 55, 125)
+menuTab.BackgroundColor3 = Color3.fromRGB(43, 18, 75)
 menuTab.Text = "⚙️ MENU"
 menuTab.TextColor3 = Color3.new(1, 1, 1)
 menuTab.TextSize = 16
@@ -211,12 +245,12 @@ menuCorner.CornerRadius = UDim.new(0, 9)
 menuCorner.Parent = menuTab
 
 local eggPage = Instance.new("Frame")
-eggPage.Size = UDim2.new(1, -20, 0, 220)
+eggPage.Size = UDim2.new(1, -20, 0, 185)
 eggPage.Position = UDim2.new(0, 10, 0, 107)
 eggPage.BackgroundColor3 = Color3.fromRGB(30, 25, 60)
 eggPage.BackgroundTransparency = 0.2
 eggPage.BorderSizePixel = 0
-eggPage.Parent = main
+eggPage.ZIndex = 2\neggPage.Parent = main
 
 local eggPageCorner = Instance.new("UICorner")
 eggPageCorner.CornerRadius = UDim.new(0, 10)
@@ -226,20 +260,20 @@ local eggText = Instance.new("TextLabel")
 eggText.Size = UDim2.new(1, -20, 1, 0)
 eggText.Position = UDim2.new(0, 10, 0, 0)
 eggText.BackgroundTransparency = 1
-eggText.Text = "🥚 Egg features coming soon..."
+eggText.Text = "🥚 Egg features coming soon...\\n\\n💜 M5 Competition Edition"
 eggText.TextColor3 = Color3.new(1, 1, 1)
 eggText.TextSize = 16
 eggText.Font = Enum.Font.Gotham
 eggText.Parent = eggPage
 
 local menuPage = Instance.new("Frame")
-menuPage.Size = UDim2.new(1, -20, 0, 220)
+menuPage.Size = UDim2.new(1, -20, 0, 185)
 menuPage.Position = UDim2.new(0, 10, 0, 107)
 menuPage.BackgroundColor3 = Color3.fromRGB(30, 25, 60)
 menuPage.BackgroundTransparency = 0.2
 menuPage.BorderSizePixel = 0
 menuPage.Visible = false
-menuPage.Parent = main
+menuPage.ZIndex = 2\nmenuPage.Parent = main
 
 local menuPageCorner = Instance.new("UICorner")
 menuPageCorner.CornerRadius = UDim.new(0, 10)
@@ -252,12 +286,12 @@ local function showTab(tab)
     menuPage.Visible = not isEgg
 
     eggTab.BackgroundColor3 = isEgg
-        and Color3.fromRGB(115, 75, 190)
-        or Color3.fromRGB(65, 55, 125)
+        and Color3.fromRGB(115, 25, 210)
+        or Color3.fromRGB(43, 18, 75)
 
     menuTab.BackgroundColor3 = not isEgg
-        and Color3.fromRGB(115, 75, 190)
-        or Color3.fromRGB(65, 55, 125)
+        and Color3.fromRGB(115, 25, 210)
+        or Color3.fromRGB(43, 18, 75)
 end
 
 eggTab.MouseButton1Click:Connect(function()
@@ -272,7 +306,7 @@ local function createToggle(parent, text, y, callback)
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(1, -20, 0, 55)
     button.Position = UDim2.new(0, 10, 0, y)
-    button.BackgroundColor3 = Color3.fromRGB(65, 55, 125)
+    button.BackgroundColor3 = Color3.fromRGB(43, 18, 75)
     button.Text = text .. " : OFF"
     button.TextColor3 = Color3.new(1, 1, 1)
     button.TextSize = 16
@@ -290,8 +324,8 @@ local function createToggle(parent, text, y, callback)
 
         button.Text = text .. (enabled and " : ON" or " : OFF")
         button.BackgroundColor3 = enabled
-            and Color3.fromRGB(100, 75, 190)
-            or Color3.fromRGB(65, 55, 125)
+            and Color3.fromRGB(130, 35, 225)
+            or Color3.fromRGB(43, 18, 75)
 
         callback(enabled)
     end)
@@ -429,237 +463,122 @@ task.spawn(function()
     end
 end)
 
-createToggle(menuPage, "ESP PLAYERS 😎", 8, function(enabled)
+createToggle(menuPage, "ESP PLAYERS", 8, function(enabled)
     espEnabled = enabled
     updateESP()
 end)
 
-createToggle(menuPage, "FARM SPEED 🏃", 73, function(enabled)
+createToggle(menuPage, "FARM SPEED", 73, function(enabled)
     farmEnabled = enabled
 end)
 
+local collapsed = false
 
--- FLY: управление направлением через джойстик/ WASD, вверх через прыжок, вниз через Ctrl
-local RunService = game:GetService("RunService")
-local flyEnabled = false
-local flySpeed = 60
-local flyVelocity
-local flyGyro
-local flyConnection
+collapse.MouseButton1Click:Connect(function()
+    collapsed = not collapsed
 
-local flyButton = Instance.new("TextButton")
-flyButton.Size = UDim2.new(1, -20, 0, 48)
-flyButton.Position = UDim2.new(0, 10, 0, 138)
-flyButton.BackgroundColor3 = Color3.fromRGB(65, 55, 125)
-flyButton.Text = "🪽 FLY : OFF"
-flyButton.TextColor3 = Color3.new(1, 1, 1)
-flyButton.TextSize = 16
-flyButton.Font = Enum.Font.GothamBold
-flyButton.Parent = menuPage
-Instance.new("UICorner", flyButton).CornerRadius = UDim.new(0, 9)
+    tabBar.Visible = not collapsed
+    eggPage.Visible = not collapsed and eggPage.Visible
+    menuPage.Visible = not collapsed and menuPage.Visible
 
-local speedLabel = Instance.new("TextLabel")
-speedLabel.Size = UDim2.new(1, -75, 0, 30)
-speedLabel.Position = UDim2.new(0, 12, 0, 188)
-speedLabel.BackgroundTransparency = 1
-speedLabel.Text = "Fly speed: " .. flySpeed
-speedLabel.TextColor3 = Color3.new(1, 1, 1)
-speedLabel.TextSize = 15
-speedLabel.Font = Enum.Font.GothamBold
-speedLabel.TextXAlignment = Enum.TextXAlignment.Left
-speedLabel.Parent = menuPage
+    if collapsed then
+        -- В маленьком окне паучок и нить полностью скрыты
+        spider.Visible = false
+        spiderThread.Visible = false
 
-local speedPlus = Instance.new("TextButton")
-speedPlus.Size = UDim2.new(0, 42, 0, 30)
-speedPlus.Position = UDim2.new(1, -54, 0, 188)
-speedPlus.BackgroundColor3 = Color3.fromRGB(115, 75, 190)
-speedPlus.Text = "+"
-speedPlus.TextColor3 = Color3.new(1, 1, 1)
-speedPlus.TextSize = 22
-speedPlus.Font = Enum.Font.GothamBold
-speedPlus.Parent = menuPage
-Instance.new("UICorner", speedPlus).CornerRadius = UDim.new(0, 8)
-
--- Отдельное небольшое окно настройки скорости
-local speedWindow = Instance.new("Frame")
-speedWindow.Name = "FlySpeedWindow"
-speedWindow.Size = UDim2.new(0, 220, 0, 125)
-speedWindow.Position = UDim2.new(0.5, -110, 0.5, -62)
-speedWindow.BackgroundColor3 = Color3.fromRGB(35, 25, 65)
-speedWindow.BorderSizePixel = 0
-speedWindow.Visible = false
-speedWindow.ZIndex = 40
-speedWindow.Parent = gui
-Instance.new("UICorner", speedWindow).CornerRadius = UDim.new(0, 12)
-
-local speedTitle = Instance.new("TextLabel")
-speedTitle.Size = UDim2.new(1, -35, 0, 30)
-speedTitle.Position = UDim2.new(0, 10, 0, 5)
-speedTitle.BackgroundTransparency = 1
-speedTitle.Text = "FLY SPEED"
-speedTitle.TextColor3 = Color3.new(1, 1, 1)
-speedTitle.Font = Enum.Font.GothamBold
-speedTitle.TextSize = 16
-speedTitle.ZIndex = 41
-speedTitle.Parent = speedWindow
-
-local speedClose = Instance.new("TextButton")
-speedClose.Size = UDim2.new(0, 28, 0, 28)
-speedClose.Position = UDim2.new(1, -33, 0, 5)
-speedClose.BackgroundColor3 = Color3.fromRGB(180, 55, 85)
-speedClose.Text = "×"
-speedClose.TextColor3 = Color3.new(1, 1, 1)
-speedClose.TextSize = 20
-speedClose.ZIndex = 41
-speedClose.Parent = speedWindow
-Instance.new("UICorner", speedClose).CornerRadius = UDim.new(0, 7)
-
-local speedValue = Instance.new("TextLabel")
-speedValue.Size = UDim2.new(0, 70, 0, 38)
-speedValue.Position = UDim2.new(0.5, -35, 0, 42)
-speedValue.BackgroundTransparency = 1
-speedValue.Text = tostring(flySpeed)
-speedValue.TextColor3 = Color3.new(1, 1, 1)
-speedValue.TextSize = 22
-speedValue.Font = Enum.Font.GothamBold
-speedValue.ZIndex = 41
-speedValue.Parent = speedWindow
-
-local function updateFlySpeed()
-    speedLabel.Text = "Fly speed: " .. flySpeed
-    speedValue.Text = tostring(flySpeed)
-end
-
-local speedMinus = Instance.new("TextButton")
-speedMinus.Size = UDim2.new(0, 42, 0, 34)
-speedMinus.Position = UDim2.new(0.5, -72, 1, -42)
-speedMinus.BackgroundColor3 = Color3.fromRGB(65, 55, 125)
-speedMinus.Text = "−"
-speedMinus.TextColor3 = Color3.new(1, 1, 1)
-speedMinus.TextSize = 22
-speedMinus.ZIndex = 41
-speedMinus.Parent = speedWindow
-Instance.new("UICorner", speedMinus).CornerRadius = UDim.new(0, 8)
-
-local speedPlusMore = Instance.new("TextButton")
-speedPlusMore.Size = UDim2.new(0, 42, 0, 34)
-speedPlusMore.Position = UDim2.new(0.5, 30, 1, -42)
-speedPlusMore.BackgroundColor3 = Color3.fromRGB(115, 75, 190)
-speedPlusMore.Text = "+"
-speedPlusMore.TextColor3 = Color3.new(1, 1, 1)
-speedPlusMore.TextSize = 22
-speedPlusMore.ZIndex = 41
-speedPlusMore.Parent = speedWindow
-Instance.new("UICorner", speedPlusMore).CornerRadius = UDim.new(0, 8)
-
-speedPlus.MouseButton1Click:Connect(function()
-    speedWindow.Visible = true
-end)
-speedClose.MouseButton1Click:Connect(function()
-    speedWindow.Visible = false
-end)
-speedMinus.MouseButton1Click:Connect(function()
-    flySpeed = math.max(10, flySpeed - 10)
-    updateFlySpeed()
-end)
-speedPlusMore.MouseButton1Click:Connect(function()
-    flySpeed = math.min(300, flySpeed + 10)
-    updateFlySpeed()
-end)
-
-local savedAutoRotate = true
-
-local function stopFly()
-    if flyConnection then
-        flyConnection:Disconnect()
-        flyConnection = nil
-    end
-    if flyVelocity then
-        flyVelocity:Destroy()
-        flyVelocity = nil
-    end
-    if flyGyro then
-        flyGyro:Destroy()
-        flyGyro = nil
-    end
-
-    local character = player.Character
-    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.PlatformStand = false
-        humanoid.AutoRotate = savedAutoRotate
-        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-    end
-end
-
-local function startFly()
-    stopFly()
-
-    local character = player.Character
-    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-    local root = character and character:FindFirstChild("HumanoidRootPart")
-
-    if not humanoid or not root then
-        flyEnabled = false
-        flyButton.Text = "🪽 FLY : OFF"
-        return
-    end
-
-    savedAutoRotate = humanoid.AutoRotate
-    humanoid.PlatformStand = false
-    humanoid.AutoRotate = false
-    humanoid:ChangeState(Enum.HumanoidStateType.Physics)
-
-    flyVelocity = Instance.new("BodyVelocity")
-    flyVelocity.Name = "EggHelperFlyVelocity"
-    flyVelocity.MaxForce = Vector3.new(1e6, 1e6, 1e6)
-    flyVelocity.P = 1e4
-    flyVelocity.Velocity = Vector3.zero
-    flyVelocity.Parent = root
-
-    flyGyro = Instance.new("BodyGyro")
-    flyGyro.Name = "EggHelperFlyGyro"
-    flyGyro.MaxTorque = Vector3.new(1e6, 1e6, 1e6)
-    flyGyro.P = 2e4
-    flyGyro.D = 500
-    flyGyro.CFrame = workspace.CurrentCamera.CFrame
-    flyGyro.Parent = root
-
-    flyConnection = RunService.RenderStepped:Connect(function()
-        if not flyEnabled or not root.Parent or not humanoid.Parent then
-            return
-        end
-
-        local camera = workspace.CurrentCamera
-        if not camera then
-            flyVelocity.Velocity = Vector3.zero
-            return
-        end
-
-        -- Берём направление стандартного джойстика, не заставляя Humanoid идти.
-        local moveDirection = humanoid.MoveDirection
-        local vertical = 0
-
-        if humanoid.Jump then
-            vertical = 1
-        elseif UserInputService:IsKeyDown(Enum.KeyCode.LeftControl)
-            or UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then
-            vertical = -1
-        end
-
-        flyVelocity.Velocity =
-            (moveDirection * flySpeed) +
-            Vector3.new(0, vertical * flySpeed, 0)
-
-        flyGyro.CFrame = CFrame.lookAt(
-            root.Position,
-            root.Position + camera.CFrame.LookVector
+        main:TweenSize(
+            UDim2.new(0, 250, 0, 48),
+            Enum.EasingDirection.Out,
+            Enum.EasingStyle.Quad,
+            0.2,
+            true
         )
-    end)
-end
+        collapse.Text = "+"
+    else
+        main:TweenSize(
+            UDim2.new(0, 390, 0, 300),
+            Enum.EasingDirection.Out,
+            Enum.EasingStyle.Quad,
+            0.2,
+            true
+        )
+        collapse.Text = "−"
 
-flyButton.MouseButton1Click:Connect(function()
-    flyEnabled = not flyEnabled
-    flyButton.Text = flyEnabled and "🪽 FLY : ON" or "🪽 FLY : OFF"
-    flyButton.BackgroundColor3 = flyEnabled
-        and Color3.fromRGB(100, 75, 1
+        -- При каждом раскрытии паучок появляется сверху и снова спускается
+        spiderThread.Size = UDim2.new(0, 2, 0, 0)
+        spider.Position = UDim2.new(1, -30, 0, -2)
+        spider.Visible = true
+        spiderThread.Visible = true
+
+        local spiderDropAgain = TweenService:Create(
+            spiderThread,
+            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0, 2, 0, 78)}
+        )
+        local spiderMoveAgain = TweenService:Create(
+            spider,
+            TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+            {Position = UDim2.new(1, -30, 0, 78)}
+        )
+        spiderDropAgain:Play()
+        spiderMoveAgain:Play()
+    end
+end)
+
+close.MouseButton1Click:Connect(function()
+    gui:Destroy()
+end)
+
+showTab("EGG")
+
+local openTween = TweenService:Create(
+    scale,
+    TweenInfo.new(2, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    {Scale = 1}
+)
+
+openTween:Play()
+
+local spiderDrop = TweenService:Create(
+    spiderThread,
+    TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+    {Size = UDim2.new(0, 2, 0, 78)}
+)
+local spiderMove = TweenService:Create(
+    spider,
+    TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+    {Position = UDim2.new(1, -30, 0, 78)}
+)
+spiderDrop:Play()
+spiderMove:Play()
+
+
+-- Надпись появляется, немного держится и плавно исчезает
+local bannerIn = TweenService:Create(
+    halloweenBanner,
+    TweenInfo.new(2, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    {TextTransparency = 0, TextStrokeTransparency = 0.15, Position = UDim2.new(0.5, 0, 0, -8)}
+)
+local strokeIn = TweenService:Create(
+    bannerStroke,
+    TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+    {Transparency = 0.15}
+)
+bannerIn:Play()
+strokeIn:Play()
+
+task.delay(1.15, function()
+    if not halloweenBanner.Parent then return end
+    local bannerOut = TweenService:Create(
+        halloweenBanner,
+        TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+        {TextTransparency = 1, TextStrokeTransparency = 1, Position = UDim2.new(0.5, 0, 0, -24)}
+    )
+    local strokeOut = TweenService:Create(
+        bannerStroke,
+        TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+        {Transparency = 1}
+    )
+    bannerOut:Play()
+    strokeOut:Play()
+end)
