@@ -43,6 +43,30 @@ local scale = Instance.new("UIScale")
 scale.Scale = 0.65
 scale.Parent = main
 
+-- Паучок спускается на нити с верхнего угла окна
+local spiderThread = Instance.new("Frame")
+spiderThread.Name = "SpiderThread"
+spiderThread.AnchorPoint = Vector2.new(0.5, 0)
+spiderThread.Position = UDim2.new(1, -30, 0, 0)
+spiderThread.Size = UDim2.new(0, 2, 0, 0)
+spiderThread.BackgroundColor3 = Color3.fromRGB(225, 220, 255)
+spiderThread.BackgroundTransparency = 0.15
+spiderThread.BorderSizePixel = 0
+spiderThread.ZIndex = 25
+spiderThread.Parent = main
+
+local spider = Instance.new("TextLabel")
+spider.Name = "HalloweenSpider"
+spider.AnchorPoint = Vector2.new(0.5, 0)
+spider.Position = UDim2.new(1, -30, 0, -2)
+spider.Size = UDim2.new(0, 30, 0, 30)
+spider.BackgroundTransparency = 1
+spider.Text = "🕷️"
+spider.TextSize = 24
+spider.ZIndex = 26
+spider.Parent = main
+
+
 -- Короткая Halloween-заставка при открытии окна
 local halloweenBanner = Instance.new("TextLabel")
 halloweenBanner.Name = "HalloweenIntro"
@@ -452,21 +476,35 @@ showTab("EGG")
 
 local openTween = TweenService:Create(
     scale,
-    TweenInfo.new(0.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    TweenInfo.new(2, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
     {Scale = 1}
 )
 
 openTween:Play()
 
+local spiderDrop = TweenService:Create(
+    spiderThread,
+    TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+    {Size = UDim2.new(0, 2, 0, 78)}
+)
+local spiderMove = TweenService:Create(
+    spider,
+    TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out),
+    {Position = UDim2.new(1, -30, 0, 78)}
+)
+spiderDrop:Play()
+spiderMove:Play()
+
+
 -- Надпись появляется, немного держится и плавно исчезает
 local bannerIn = TweenService:Create(
     halloweenBanner,
-    TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
+    TweenInfo.new(2, Enum.EasingStyle.Back, Enum.EasingDirection.Out),
     {TextTransparency = 0, TextStrokeTransparency = 0.15, Position = UDim2.new(0.5, 0, 0, -8)}
 )
 local strokeIn = TweenService:Create(
     bannerStroke,
-    TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+    TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
     {Transparency = 0.15}
 )
 bannerIn:Play()
@@ -476,12 +514,12 @@ task.delay(1.15, function()
     if not halloweenBanner.Parent then return end
     local bannerOut = TweenService:Create(
         halloweenBanner,
-        TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+        TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
         {TextTransparency = 1, TextStrokeTransparency = 1, Position = UDim2.new(0.5, 0, 0, -24)}
     )
     local strokeOut = TweenService:Create(
         bannerStroke,
-        TweenInfo.new(0.55, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
+        TweenInfo.new(2, Enum.EasingStyle.Quad, Enum.EasingDirection.In),
         {Transparency = 1}
     )
     bannerOut:Play()
